@@ -12,16 +12,14 @@ import org.testng.ITestResult;
 import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
 
-import MBI.DST.Listeners.ExtentNode;
-import MBI.DST.Listeners.ExtentReportsManager;
-import MBI.DST.Listeners.LogHelper;
+
 import MBI.DST.Mobile.BaseTest;
 import io.appium.java_client.ios.IOSDriver;
 
 public class TestListeners implements ITestListener{
 	
 	 ExtentReports extent = ExtentReportsManager.getExtentReports();
-	    ExtentTest test;
+	 ExtentTest test;
 	    
 	    @Override
 	    public void onStart(ITestContext context) {
@@ -37,6 +35,7 @@ public class TestListeners implements ITestListener{
 	    @Override
 	    public void onTestStart(ITestResult result) {
 //	    	test = extent.createTest(result.getMethod().getMethodName());
+	    	System.out.println("[DEBUG] Creating Extent Test for: " + result.getMethod().getMethodName());
 	    	ExtentNode.createTest(result.getMethod().getMethodName());
 	    	LogHelper.resetCounter();
 	    }
@@ -45,11 +44,26 @@ public class TestListeners implements ITestListener{
 	    public void onTestSuccess(ITestResult result) {
 	        try {
 	            IOSDriver driver = BaseTest.getDriver(); // Ambil langsung dari BaseTest
+	            if(driver != null) {
 	            String screenshotPath = getSuccesScreenshotPath(result.getMethod().getMethodName(), driver);
 	            ExtentNode.getNode().addScreenCaptureFromPath(screenshotPath);
 	            LogHelper.pass("Test Passed");
+	            }
+	            else {
+	                System.out.println("Driver is null, skipping screenshot for test: " + result.getMethod().getMethodName());
+	            }
+	            
+	            
 	        } catch (IOException e) {
 	            e.printStackTrace();
+	        }
+	        
+	        ExtentTest node = ExtentNode.getNode();
+	        if (node != null) {
+	            node.fail(result.getThrowable());
+	        } else {
+	            System.out.println("[WARNING] ExtentNode.getNode() null. Logging to console instead.");
+	            result.getThrowable().printStackTrace();
 	        }
 			
 	    }
@@ -57,14 +71,27 @@ public class TestListeners implements ITestListener{
 	    @Override
 	    public void onTestFailure(ITestResult result) {    
 	    	try {
-	            IOSDriver driver = BaseTest.getDriver(); //  Ambil langsung dari BaseTest
+	            IOSDriver driver = BaseTest.getDriver(); //Ambil langsung dari BaseTest
+	            if(driver != null){
 	            String screenshotPath = getFailedScreenshotPath(result.getMethod().getMethodName(), driver);
 	            ExtentNode.getNode().addScreenCaptureFromPath(screenshotPath);
 	            LogHelper.fail("Test Failed");
+	            }
+	            else {
+	                System.out.println("Driver is null, skipping screenshot for test: " + result.getMethod().getMethodName());
+	            }
 	        } catch (IOException e) {
 	            e.printStackTrace();
 	        }
 	    	 ExtentNode.getNode().fail(result.getThrowable());
+	    	 
+	    	 ExtentTest node = ExtentNode.getNode();
+	    	    if (node != null) {
+	    	        node.fail(result.getThrowable());
+	    	    } else {
+	    	        System.out.println("[WARNING] ExtentNode.getNode() null. Logging to console instead.");
+	    	        result.getThrowable().printStackTrace();
+	    	    }
 			
 	    }
 

@@ -27,7 +27,7 @@ public class LogHelper {
         if (currentStepNode != null) {
             currentStepNode.log(Status.PASS, message);
         } else {
-            ExtentNode.getTest().log(Status.PASS, message);
+            ExtentNode.getTest().log(Status.FAIL, message);
         }
     }
 

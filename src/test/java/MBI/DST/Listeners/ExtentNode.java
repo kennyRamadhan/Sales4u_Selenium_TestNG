@@ -5,7 +5,7 @@ import java.util.Map;
 
 import com.aventstack.extentreports.ExtentTest;
 
-import MBI.DST.Listeners.ExtentReportsManager;
+
 
 public class ExtentNode {
 	
@@ -13,31 +13,32 @@ public class ExtentNode {
 	private static Map<Long, ExtentTest> parentTestMap = new HashMap<>();
     private static Map<Long, ExtentTest> nodeTestMap = new HashMap<>();
 
-    @SuppressWarnings("deprecation")
-	public static synchronized ExtentTest createTest(String testName) {
+    public static synchronized ExtentTest createTest(String testName) {
         ExtentTest test = ExtentReportsManager.getExtentReports().createTest(testName);
         parentTestMap.put(Thread.currentThread().getId(), test);
         return test;
     }
 
-    @SuppressWarnings("deprecation")
-	public static synchronized ExtentTest getTest() {
+    public static synchronized ExtentTest getTest() {
         return parentTestMap.get(Thread.currentThread().getId());
     }
 
-    @SuppressWarnings("deprecation")
-	public static synchronized ExtentTest createNode(String stepName) {
+    public static synchronized ExtentTest createNode(String stepName) {
         ExtentTest node = getTest().createNode(stepName);
         nodeTestMap.put(Thread.currentThread().getId(), node);
         return node;
     }
 
-    @SuppressWarnings("deprecation")
-	public static synchronized ExtentTest getNode() {
+    public static synchronized ExtentTest getNode() {
     	 ExtentTest node = nodeTestMap.get(Thread.currentThread().getId());
-    	    if (node == null) {
-    	        // fallback ke parent test supaya tidak NPE
-    	        return getTest();
+    	 if (node == null) {
+    	        ExtentTest parent = getTest();
+    	        if (parent == null) {
+    	            // create parent test otomatis jika hilang
+    	            parent = ExtentReportsManager.getExtentReports().createTest("Unnamed Test");
+    	            parentTestMap.put(Thread.currentThread().getId(), parent);
+    	        }
+    	        return parent;
     	    }
     	    return node;
     }

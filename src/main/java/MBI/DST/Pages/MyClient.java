@@ -5,11 +5,14 @@ import java.time.Duration;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import MBI.DST.Utils.Utils;
 import io.appium.java_client.ios.IOSDriver;
 import io.appium.java_client.pagefactory.AppiumFieldDecorator;
 import io.appium.java_client.pagefactory.iOSXCUITFindBy;
+import io.netty.handler.timeout.TimeoutException;
 
 public class MyClient {
 	
@@ -99,6 +102,17 @@ public class MyClient {
 		// Menggunakan contains supaya nama user di belakang bisa berubah-ubah
 		String dynamicXpath = String.format("//XCUIElementTypeStaticText[contains(@name,'Phone number %s is already existed')]", phoneNumber);
 		return driver.findElement(By.xpath(dynamicXpath));
+	}
+	
+	public WebElement waitForErrorMessage(String phoneNumber, int timeoutSeconds) {
+	    try {
+	        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(timeoutSeconds));
+	        return wait.until(ExpectedConditions.visibilityOfElementLocated(
+	            By.xpath("//XCUIElementTypeStaticText[contains(@name,'Phone number " + phoneNumber + " is already existed')]")
+	        ));
+	    } catch (TimeoutException e) {
+	        return null; // kalau tidak ketemu return null
+	    }
 	}
 	
 	

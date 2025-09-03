@@ -3,16 +3,14 @@ package MBI.DST.Config;
 import java.io.File;
 import java.io.IOException;
 import java.util.Random;
-
 import org.openqa.selenium.remote.DesiredCapabilities;
-
 import MBI.DST.Utils.ConfigLoader;
 import io.appium.java_client.ios.IOSDriver;
 import io.appium.java_client.service.local.AppiumDriverLocalService;
 import io.appium.java_client.service.local.AppiumServiceBuilder;
 
 public class AppiumServerManager {
-	
+
 	private static AppiumDriverLocalService service;
 	private static IOSDriver driver;
 	private static File nodePath = new File("/Users/kennyramadhan/.nvm/versions/node/v24.4.1/bin/node");
@@ -39,11 +37,16 @@ public class AppiumServerManager {
 
 	public static void initDriver() throws Exception {
 		DesiredCapabilities caps = new DesiredCapabilities();
-
-		caps.setCapability("platformName", ConfigLoader.getOrDefault("platformName", "iOS"));
-		caps.setCapability("deviceName", ConfigLoader.getOrDefault("deviceName", "iPhone Simulator"));
-		caps.setCapability("automationName", ConfigLoader.getOrDefault("automationName", "XCUITest"));
-
+		
+		if(ConfigLoader.has("platformName")) {
+			caps.setCapability("platformName", ConfigLoader.get("platformName"));
+		}
+		if(ConfigLoader.has("deviceName")) {
+			caps.setCapability("deviceName", ConfigLoader.get("deviceName"));
+		}
+		if(ConfigLoader.has("automationName")) {
+			caps.setCapability("automationName", ConfigLoader.get("automationName"));
+		}
 		if (ConfigLoader.has("udid")) {
 			caps.setCapability("udid", ConfigLoader.get("udid"));
 		}

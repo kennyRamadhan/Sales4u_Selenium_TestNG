@@ -1,8 +1,8 @@
 package MBI.DST.Mobile;
 
 import org.testng.annotations.AfterMethod;
+import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 
 
@@ -38,7 +38,7 @@ public class BaseTest {
 	 */
 
 
-	@AfterClass(alwaysRun = true)
+	@AfterSuite(alwaysRun = true)
 	public void tearDown() {
 
 		AppiumServerManager.getDriver().quit();
@@ -52,12 +52,17 @@ public class BaseTest {
 	
 	@BeforeMethod
     public void ensureDriverReady() throws Exception {
-        if (driver == null) {
-            System.out.println("Driver null, inisialisasi ulang...");
-            AppiumServerManager.initDriver();
-            driver = AppiumServerManager.getDriver();
-            performLogin();
-        }
+		if (driver == null) {
+	        System.out.println("Driver null, inisialisasi ulang...");
+	        AppiumServerManager.initDriver();
+	        driver = AppiumServerManager.getDriver();
+
+	        if (driver == null) {
+	            throw new RuntimeException("Gagal inisialisasi Appium Driver!");
+	        }
+
+	        performLogin();
+	    }
     }
 	
 	
@@ -84,7 +89,10 @@ public class BaseTest {
 	    }
 	
 	public static IOSDriver getDriver() {
-        return driver;
+		if (driver == null) {
+	        driver = AppiumServerManager.getDriver();
+	    }
+	    return driver;
     }
 
 

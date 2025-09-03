@@ -10,7 +10,7 @@ public class ConfigLoader {
 
 	static {
 		try {
-			FileInputStream fis = new FileInputStream("src/main/java/MBI/Sales4u/Resources/config.properties");
+			FileInputStream fis = new FileInputStream("src/main/java/MBI/DST/Resources/config.properties");
 			props.load(fis);
 			fis.close();
 			System.out.println("Config loaded successfully.");

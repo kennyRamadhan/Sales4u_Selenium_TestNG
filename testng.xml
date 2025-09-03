@@ -2,11 +2,11 @@
 <!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
 <suite name="Suite">
 <listeners>
-        <listener class-name="MBI.Sales4u.Listeners.TestListeners"/>
+        <listener class-name="MBI.DST.Listeners.TestListeners"/>
   </listeners>
   <test name="Regression">
     <classes>
-      <class name="MBI.Sales4u.Mobile.MyClientTest"></class>
+      <class name="MBI.DST.Mobile.MyClientTest"></class>
     </classes>
   </test> <!-- Test -->
 </suite> <!-- Suite -->
