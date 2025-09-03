@@ -68,24 +68,27 @@
 6. Penjelasan File Penting
 
 				- **File BaseTest** → Setup & teardown yang akan di jalankan di semua test case
-				- **Package MBI.Sales4u.Pages/** → Implementasi Page Object Model (misalnya Login)
+				- **Package MBI.DST.Pages/** → Implementasi Page Object Model (misalnya Login)
 				- **File ConfigLoader** → Loader konfigurasi dari file `.properties`
 				- **File Utils** → Custom  Function yang digunakan di Pages seperti verifyElementExist,tapWhenElementVisible dll.
 				- **File AppiumServerManager** → Start/stop Appium server otomatis
-				- **Package MBI.Sales4u.Listeners** → Custom listener untuk logging, screenshot, dan setup report HTML dengan Extent Reports
-				- **Package MBI.Sales4u.Mobile** → Berisi Test Case yang akan di tulis 
+				- **Package MBI.DST.Listeners** → Custom listener untuk logging, screenshot, dan setup report HTML dengan Extent Reports
+				- **Package MBI.DST.Mobile** → Berisi Test Case yang akan di tulis 
 				
-7. Hasil Report
+7. Hasil Report & Screenshot
 			- reports/
+   			- reports/pass
+   			- reports/fail
+   	
 			  ```
-8. Alur Eksekusi
+9. Alur Eksekusi
 
 				1. Jalankan `testng.xml`
 				2. Listener aktif (logging, screenshot, report)
 				3. `BaseTest` inisialisasi driver
 				4. Eksekusi test case via `Pages` (POM)
 				5. Hasil tersimpan di report folder
-9. Catatan
+10. Catatan
 				- Pastikan device/emulator aktif sebelum menjalankan mobile test.
 				- Jika ingin menggunakan real device pastikan WDA sudah terinstall di device
 				- Pastikan path node dan appium sudah di ganti sesuai dengan local machine
