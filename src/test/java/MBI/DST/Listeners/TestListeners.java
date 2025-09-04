@@ -16,11 +16,45 @@ import com.aventstack.extentreports.ExtentTest;
 import MBI.DST.Mobile.BaseTest;
 import io.appium.java_client.ios.IOSDriver;
 
+/**
+ * <h1>TestListeners</h1>
+ * Implementasi custom TestNG {@link ITestListener} untuk mengelola event test 
+ * seperti start, success, failure, skip, dan selesai eksekusi suite.
+ *
+ * <p><b>Fitur Utama:</b></p>
+ * <ul>
+ *   <li>Inisialisasi ExtentReports di awal suite</li>
+ *   <li>Membuat node report untuk setiap test case</li>
+ *   <li>Menangkap screenshot pada saat test sukses atau gagal</li>
+ *   <li>Menambahkan log PASS/FAIL ke Extent Report</li>
+ *   <li>Melakukan flush report setelah semua test selesai</li>
+ * </ul>
+ *
+ * <p><b>Penggunaan:</b></p>
+ * <pre>
+ * &commat;Listeners(TestListeners.class)
+ * public class AddNewClientTest {
+ *     // Test case di sini
+ * }
+ * </pre>
+ *
+ * <p>Class ini membantu membuat reporting lebih informatif dengan menambahkan screenshot 
+ * dan log status setiap test case.</p>
+ *
+ * @author Kenny Ramadhan
+ * @since 2025-09-03
+ * @version 1.0
+ */
+
 public class TestListeners implements ITestListener{
 	
 	 ExtentReports extent = ExtentReportsManager.getExtentReports();
 	 ExtentTest test;
-	    
+	 
+	 	/**
+	     * Dipanggil sekali sebelum suite dimulai.
+	     * Menginisialisasi ExtentReports dan menambahkan informasi suite.
+	     */
 	    @Override
 	    public void onStart(ITestContext context) {
 	        // Ambil instance dari ExtentReportsManager (sudah otomatis bikin folder & file)
@@ -31,7 +65,10 @@ public class TestListeners implements ITestListener{
 	    }
 
 	    
-	    
+	    /**
+	     * Dipanggil setiap kali sebuah test method dimulai.
+	     * Membuat node test baru di Extent Report dan reset counter log.
+	     */
 	    @Override
 	    public void onTestStart(ITestResult result) {
 //	    	test = extent.createTest(result.getMethod().getMethodName());
@@ -39,7 +76,12 @@ public class TestListeners implements ITestListener{
 	    	ExtentNode.createTest(result.getMethod().getMethodName());
 	    	LogHelper.resetCounter();
 	    }
-
+	    
+	    
+	    /**
+	     * Dipanggil jika test berhasil.
+	     * Menyimpan screenshot ke folder reports/pass dan melog status PASS.
+	     */
 	    @Override
 	    public void onTestSuccess(ITestResult result) {
 	        try {
@@ -67,7 +109,12 @@ public class TestListeners implements ITestListener{
 	        }
 			
 	    }
-
+	    
+	    
+	    /**
+	     * Dipanggil jika test gagal.
+	     * Menyimpan screenshot ke folder reports/fail dan melog status FAIL.
+	     */
 	    @Override
 	    public void onTestFailure(ITestResult result) {    
 	    	try {
@@ -94,11 +141,22 @@ public class TestListeners implements ITestListener{
 	    	    }
 			
 	    }
-
+	    
+	    
+	    /**
+	     * Dipanggil jika test dilewati (skip).
+	     * Bisa ditambahkan log atau screenshot jika diperlukan.
+	     */
 	    @Override
 	    public void onTestSkipped(ITestResult result) {
 	    }
+	    
+	    
 
+	    /**
+	     * Dipanggil sekali setelah suite selesai dijalankan.
+	     * Melakukan flush ExtentReports agar file report final dibuat.
+	     */
 	    @Override
 	    public void onFinish(ITestContext context) {
 	    	 System.out.println("Flushing Extent Report...");
@@ -107,6 +165,21 @@ public class TestListeners implements ITestListener{
 	                System.getProperty("user.dir") + "/reports/");
 	    }
 	    
+	    
+	    
+	    
+	    
+	    
+	    /**
+	     * Membuat screenshot untuk test yang berhasil.
+	     *
+	     * @param testCasesName nama test case
+	     * @param driver instance IOSDriver
+	     * @return path file screenshot
+	     * @throws IOException jika file gagal disimpan
+	     */
+	   
+	    
 	    private String getSuccesScreenshotPath(String testCasesName,IOSDriver driver) throws IOException {
 			
 			File source = driver.getScreenshotAs(OutputType.FILE);
@@ -114,6 +187,18 @@ public class TestListeners implements ITestListener{
 			FileUtils.copyFile(source,new File(destinationFile));
 			return destinationFile;
 		}
+	    
+	    
+	    
+	    
+	    /**
+	     * Membuat screenshot untuk test yang gagal.
+	     *
+	     * @param testCasesName nama test case
+	     * @param driver instance IOSDriver
+	     * @return path file screenshot
+	     * @throws IOException jika file gagal disimpan
+	     */
 	    
 	    private String getFailedScreenshotPath(String testCasesName,IOSDriver driver) throws IOException {
 			

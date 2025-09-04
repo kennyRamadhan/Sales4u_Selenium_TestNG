@@ -9,6 +9,18 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 
+/*
+* <h1>Class Description</h1>
+* Konfigurasi File Excel
+*
+* <p><b>Usage:</b> 
+* Gunakan class ini untuk membaca dan menggunakan file excel ke dalam test case.</p>
+*
+* @return Data Excel
+* @author Kenny Ramadhan
+*/
+
+
 public class UtilsExcel {
 	
 	 public static Object[][] getTestData(String excelPath, String sheetName) {
